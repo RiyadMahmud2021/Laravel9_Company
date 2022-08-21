@@ -8,6 +8,9 @@ use App\Http\Controllers\Auth\NewPasswordController;
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuth;
+use App\Http\Controllers\Home\HomeSliderController;
+use App\Http\Controllers\Home\AboutController;
+
 
 
 /*
@@ -23,13 +26,19 @@ use App\Http\Controllers\AdminAuth;
 
 Route::get('/', function () {
     return view('frontend/index');
+})->name('home');
+// About Page All Route 
+Route::controller(AboutController::class)->group(function () {
+    Route::get('/about', 'AllAboutPage')->name('home.about');
 });
 
 
-/*  Admin Panel Start */
+
 /*  --------------- */
+
 Route::middleware(['auth','verified'])->group(function () {
 
+    /*  Admin Panel Start */
     Route::controller(AdminController::class)->group(function () {
 
         // ------------------ Profile --------------------
@@ -44,8 +53,21 @@ Route::middleware(['auth','verified'])->group(function () {
         // 
     });
 
+    // Home Slide All Route 
+    Route::controller(HomeSliderController::class)->group(function () {
+        Route::get('/home/slide', 'HomeSliderAdmin')->name('home.slide');
+        Route::post('/update/slider', 'UpdateSliderAdmin')->name('update.slider');    
+    });
+
+    // About Page All Route 
+    Route::controller(AboutController::class)->group(function () {
+        Route::get('/about/page', 'AboutPageAdmin')->name('about.page'); 
+        Route::post('/update/about', 'UpdateAboutAdmin')->name('update.about');
+    });
+
 });
 
+    // Admin Auth Route 
     Route::controller(AdminAuth::class)->group(function () {
 
         // ------------------ Logout --------------------
@@ -64,9 +86,7 @@ Route::middleware(['auth','verified'])->group(function () {
         Route::post('admin/update-password', 'UpdatePassword')->name('update.password');
         
     });
- 
 
-/*  Admin Panel End */
 /*  --------------- */
 
 

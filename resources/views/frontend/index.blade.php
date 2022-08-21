@@ -4,6 +4,7 @@
 @section('title')
 Home | EasyLearning Website
 @endsection
+
     <!-- banner-area -->
     @include('frontend.home_all.home_slide')
     <!-- banner-area-end -->
@@ -213,12 +214,7 @@ Home | EasyLearning Website
     </section>
     <!-- work-process-area-end -->
 
-    <!-- portfolio-area -->
-    
-  @include('frontend.home_all.portfolio')
-
-    <!-- portfolio-area-end -->
-
+ 
     <!-- partner-area -->
     <section class="partner">
     <div class="container">
@@ -319,9 +315,7 @@ Home | EasyLearning Website
             </section>
             <!-- testimonial-area-end -->
 
-            <!-- blog-area -->
-            @include('frontend.home_all.home_blog')
-            <!-- blog-area-end -->
+ 
 
             <!-- contact-area -->
             <section class="homeContact">

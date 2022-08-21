@@ -20,8 +20,7 @@
                                     <span>Home Slide Setup</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <!-- <li><a href="{}">Home Slide</a></li> { route('home.slide') }
-                                 -->
+                                    <li><a href="{{ route('home.slide') }}">Home Slide</a></li> 
                                 </ul>
                             </li>
 
@@ -31,9 +30,11 @@
                                     <span>About Page Setup</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <!-- <li><a href="{}">About Page</a></li> { route('about.page') }
-                                    <li><a href="{}}">About Multi Image</a></li> { route('about.multi.image') 
-                                    <li><a href="{}">All Multi Image</a></li>  { route('all.multi.image') }--> 
+                                    <li><a href="{{ route('about.page') }}">About Page</a></li> 
+                                    <li><a href="{}">About Multi Image</a></li>  
+                                    <!-- { route('about.multi.image')} -->
+                                    <li><a href="{}">All Multi Image</a></li>   
+                                    <!-- { route('all.multi.image') }  -->
                                 </ul>
                             </li>
 

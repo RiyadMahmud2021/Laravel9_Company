@@ -1,7 +1,6 @@
 
 @php
-$homeslide = App\Models\HomeSlide::find(1);
-
+$homeslide = App\Models\HomeSlide::find(3);
 @endphp
 
 <section class="banner">

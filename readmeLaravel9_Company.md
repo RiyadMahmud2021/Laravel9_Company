@@ -10,10 +10,10 @@ Or,
 
 - Clearing view, config, cache with command 
 
-     - php artisan view:clear
-     - php artisan config:clear
-     - php artisan cache:clear
-     - php artisan route:clear
+     php artisan view:clear
+     php artisan config:clear
+     php artisan cache:clear
+     php artisan route:clear
 
 - Project zipping
 - Database exporting from xampp 'localhost/phpmyadmin'
@@ -401,3 +401,219 @@ Section 3: Laravel 9 Breeze Authentication
      - inserting a sample data in db 
 
 45. Backend Home Page Slider Option Part 2
+     - in sidebar create menu 'Home Slider Setup' 
+     - {{route('home.slider')}}
+     - 
+     // Home Slide All Route 
+     use App\Http\Controllers\Home\HomeSliderController;
+     Route::controller(HomeSliderController::class)->group(function () {
+          Route::get('/home/slide', 'HomeSlider')->name('home.slide');    
+     });
+     - php artisan make:controller Home/HomeSliderController
+     - HomeSliderController.php
+          use App\Models\HomeSlide;
+
+          public function HomeSlider(){
+
+               $homeslide = HomeSlide::find(1);
+               return view('admin.home_slide.home_slide_all',compact('homeslide'));
+
+          } // End Method 
+
+     - in 'admin' folder -> home_slide folder -> home_slide_all.blade.php and code from admin_profile_edit.blade.php and setup 
+     - putting blade syntax on home_slide_all.blade.php
+
+46. Install Image intervention Package
+     - image intervation v2
+     - 'php composer require intervention/image' or 'composer require intervention/image'
+     - in config/app.php : Intervention\Image\ImageServiceProvider::class,
+     - in config/app.php on $aliases : 'Image' => Intervention\Image\Facades\Image::class,
+     - php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravelRecent"
+
+47. Backend Home Page Slider Option Part 3
+     - in public/upload: create folder 'home_slide'
+     - 
+     // Home Slide All Route 
+     Route::controller(HomeSliderController::class)->group(function () {
+          Route::get('/home/slide', 'HomeSlider')->name('home.slide');
+          Route::post('/update/slider', 'UpdateSlider')->name('update.slider');    
+     });
+     - 
+     public function UpdateSlider(Request $request){
+
+        $slide_id = $request->id;
+
+        if ($request->file('home_slide')) {
+            $image = $request->file('home_slide');
+            $name_gen = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();  // 3434343443.jpg
+
+            Image::make($image)->resize(636,852)->save('upload/home_slide/'.$name_gen);
+            $save_url = 'upload/home_slide/'.$name_gen;
+
+            HomeSlide::findOrFail($slide_id)->update([
+                'title' => $request->title,
+                'short_title' => $request->short_title,
+                'video_url' => $request->video_url,
+                'home_slide' => $save_url,
+
+            ]); 
+            $notification = array(
+            'message' => 'Home Slide Updated with Image Successfully', 
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+        } else{
+
+            HomeSlide::findOrFail($slide_id)->update([
+                'title' => $request->title,
+                'short_title' => $request->short_title,
+                'video_url' => $request->video_url,  
+
+            ]); 
+            $notification = array(
+            'message' => 'Home Slide Updated without Image Successfully', 
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+        } // end Else
+
+     } // End Method 
+     - {{ route('update.slider') }}
+
+48. Frontend Home Page Slider
+     - We will do dynamic all sections of home page
+     such as: banner, about, blog, footer etc...
+     - create 'home_all' folder and file 'home_slide.blade.php' 
+     - put banner code in 'home_slide.blade.php' 
+     - now write these in 'index.blade.php'
+          <!-- banner-area -->
+          @include('frontend.home_all.home_slide')
+          <!-- banner-area-end -->
+
+49. Backend About Page Setup Part 1
+     - php artisan make:model About -m 
+     - preparing migration for About 
+
+        Schema::create('abouts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->nullable();
+            $table->string('short_title')->nullable();
+            $table->text('short_description')->nullable();
+            $table->text('long_description')->nullable();
+            $table->string('about_image')->nullable();
+            $table->timestamps();
+        }); 
+
+     - About.php 
+     protected $guarded = [];
+
+     - php artisan migrate
+     - inserting a sample data in db 
+     - in sidebar create menu 'About Page Setup' 
+     - {{ route('about.page') }}
+     - in 'admin' folder -> 'about_page' folder -> about_page_all.blade.php and code from admin_profile_edit.blade.php and setup 
+     - 
+     // About Page All Route 
+     use App\Http\Controllers\Home\AboutController;
+     Route::controller(AboutController::class)->group(function () {
+          Route::get('/about/page', 'AboutPageAdmin')->name('about.page'); // backend 
+     });
+     - php artisan make:controller Home/AboutController 
+     - AboutController.php
+          use App\Models\About;
+          public function AboutPageAdmin(){
+          
+               $aboutpage = About::find(1);
+               return view('admin.about_page.about_page_all',compact('aboutpage'));
+
+          } // End Method 
+     - putting blade syntax on about_page_all.blade.php
+
+50. Backend About Page Setup Part 2
+     - in public/upload: create folder 'home_about'
+     - 
+    // About Page All Route 
+    Route::controller(AboutController::class)->group(function () {
+        Route::get('/about/page', 'AboutPageAdmin')->name('about.page'); 
+        Route::post('/update/about', 'UpdateAboutAdmin')->name('update.about');
+    });
+     - 
+     public function UpdateAbout(Request $request){
+
+        $about_id = $request->id;
+
+        if ($request->file('about_image')) {
+            $image = $request->file('about_image');
+            $name_gen = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();  // 3434343443.jpg
+
+            Image::make($image)->resize(523,605)->save('upload/home_about/'.$name_gen);
+            $save_url = 'upload/home_about/'.$name_gen;
+
+            About::findOrFail($about_id)->update([
+                'title' => $request->title,
+                'short_title' => $request->short_title,
+                'short_description' => $request->short_description,
+                'long_description' => $request->long_description,
+                'about_image' => $save_url,
+
+            ]); 
+            $notification = array(
+            'message' => 'About Page Updated with Image Successfully', 
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+        } else{
+
+            About::findOrFail($about_id)->update([
+                'title' => $request->title,
+                'short_title' => $request->short_title,
+                'short_description' => $request->short_description,
+                'long_description' => $request->long_description,
+
+            ]); 
+            $notification = array(
+            'message' => 'About Page Updated without Image Successfully', 
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+        } // end Else
+
+    } // End Method 
+
+    - {{ route('update.about') }} in button 
+
+
+51. Frontend About Page Show Data Part 1
+     - We will do dynamic all sections of home page
+     such as: banner, about, blog, footer etc...
+     - in 'home_all' folder create file 'home_about.blade.php' 
+     - put about section code in 'home_about.blade.php' with 'About' model 
+
+     @php
+          $aboutpage = App\Models\About::find(1);
+     @endphp
+
+     and create blade syntax 
+
+     - put about page code in 'about_page.blade.php' 
+     - other about route : 
+          // About Page All Route 
+          Route::controller(AboutController::class)->group(function () {
+               Route::get('/about', 'AllAboutPage')->name('home.about');
+          });
+     - 'AllAboutPage' method on AboutController.php 
+     - in 'about_page.blade.php' create blade syntax 
+     - now write these in 'index.blade.php'
+          <!-- about-area -->
+          @include('frontend.home_all.home_about')
+          <!-- about-area-end -->
+
+     

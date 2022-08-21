@@ -1,8 +1,4 @@
   
-<!-- @php
-
-$route = Route::current()->getName();
-@endphp -->
 
    <header>
             <div id="sticky-header" class="menu__area transparent-header">
@@ -19,10 +15,10 @@ $route = Route::current()->getName();
     <div class="navbar__wrap main__menu d-none d-xl-flex">
     <ul class="navigation">
 
-    <li class=" "><a href="">Home</a></li> 
+    <li class=" "><a href="{{ route('home') }}">Home</a></li> 
  
 
-    <li class=" "><a href="">About</a></li>
+    <li class=""><a href="{{route('home.about')}}">About</a></li>
  
     <li><a href="services-details.html">Services</a></li>
 
